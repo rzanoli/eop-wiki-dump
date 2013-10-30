@@ -1,0 +1,451 @@
+BIUTEE is a [[transformation-based EDA]], provided now as part of the Excitement Open Platform ([[EOP]]).
+This [[EDA]] requires a specific [[LAP]], provided as part of the [[EOP]] as well.
+This page describes how to run these LAP and EDA.
+An older (and now obsolete) stand-alone version of these components can be found here:
+[[http://cs.biu.ac.il/~nlp/downloads/biutee]].
+
+BIUTEE is provided with a folder called the [[BIUTEE Environment]], containing its configuration, proprietary working folder, file-based resources, and more. It is also provided with very large [[BIUTEE#db-based-knowledge-resources|DB-based]] resources, downloaded and handled separately.
+
+This guide explains how to download and run BIUTEE. All steps mentioned here are an expansion of the [[Detailed-manual-for-novice-users|general EOP detailed manual]]
+
+== System Requirements ==
+BIUTEE requires the items specified as EOP's [[Detailed-manual-for-novice-users#supported-platforms|Supported Platforms]] and [[Detailed-manual-for-novice-users#prerequisites|Prerequisites]], and additionally:
+* '''Memory:''' At least 5 GB RAM
+* '''Disk Space:''' At least 20 GB free
+
+== How to Download and Build BIUTEE ==
+# Follow the corresponding steps in EOP's [[detailed manual (How to Donwload and Build the EOP) | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users#wiki-How_to_Donwload_and_Build_the_EOP]]. In this guide, the local folder where the EOP source code was extracted to will be referred to as <tt>$EOP</tt>.
+# Download the zip file of '''EOP-resources''' as well, as explained in that "detailed manual". After extracting the zip file, you will find a folder named "BIUTEE_Environment" within it. In this guide, this folder will be referred to as <tt>$BIUTEE</tt>.
+# ''Linux only:'' Make sure the file <tt>$BIUTEE/third-party/nagel_sentence_splitter/linux_64/tokenizer</tt> is in your system's path. For example, by copying it to <tt>/usr/bin</tt>.
+# In order to use BIUTEE in the [[Eclipse IDE|http://www.eclipse.org]], import the code as Maven projects.
+
+Downloading and installing DB-based resources is specified [[BIUTEE#db-based-knowledge-resources|here]].
+
+== How to Run BIUTEE ==
+
+=== Defining Environment Variables ===
+Please create an environment variable called DATA and set it to the path of the data directory in the [[BIUTEE Environment]]. On UNIX system using ''bash'' shell, you could do it using the command below (your-path is the path of the data directory in the [[BIUTEE Environment]]):
+
+export DATA="your-path"
+
+From now on, you should see this path when you enter the following command in that terminal:
+
+echo $DATA
+
+You may use these external tutorials for defining environment variables [[in Windows|http://www.javux.com/JavuxDocs/Tutorials/SetEnvVars_JT16.html]] and [[in Linux|http://manuals.its.virginia.edu/unixtut/unix8.html]].
+
+=== Running Scenarios ===
+BIUTEE can be run via two interfaces:
+# <a name="interface_eop">EOP Interface</a>, accessing LAP and EDA. Currently this entire interface is provided via the class <tt>'''eu.excitementproject.eop.biutee.rteflow.systems.excitement.BiuteeMain'''</tt>, and uses the configuration file <tt>$BIUTEE/workdir/biutee.xml</tt>.
+# <a name="interface_legacy">Legacy Interface</a>, accessing proprietary classes for preprocessing, training and testing. These use the configuration file <tt>$BIUTEE/workdir/biutee_legacy.xml</tt> (which has the same content as <tt>$BIUTEE/workdir/biutee.xml</tt>, only with a slightly different structure, more details [[BIUTEE#configuration-file|here]]).
+	
+BIUTEE can be run on these kinds of input:
+# <a name="input_pairs">RTE Pairs</a> - used in RTE 1-5 main task. It is formatted as an XML file, consisting of a sequence of text-hypothesis pairs. This is the most kind of input, if you are not sure what to use - use this kind.
+# <a name="input_sum">RTE Sum</a> - used in RTE 6-7. It is formatted as a folder, with topics, where each topic has documents and hypotheses. To train and test on this input, it must first be indexed (as described later in [[BIUTEE#running-steps | the steps table]]).
+
+=== Running Steps ===
+The following table describes how to run BIUTEE via command line, in different scenarios. '''The steps are presented in the order in which they should be run.'''
+
+Note that you must follow '''only one specific scenario'''. For example, if you wish to run via the EOP interface and use RTE Pairs input, follow only the '''EOP+Pairs''' rows (and the '''ALL''' rows, which apply to all scenarios). According to this, you should be running steps: '''1, 3, 4, 5, 10, 11'''.
+
+
+For further details regarding running EOP in general via command line, see [[Detailed-manual-for-novice-users#how-to-run-the-system | here]].
+
+{|
+|-
+! <nowiki>#</nowiki>
+! Scenario
+! Step
+! Command
+! Notes
+
+|-
+! scope="row" | 1
+! scope="row" | ALL
+| Configure general system parameters
+| Edit configuration file <tt>biutee.xml</tt> / <tt>biutee_legacy.xml</tt>
+| * Parameters like number of threads and knowledge resources. More details [[BIUTEE#configuration-file| here]].
+
+|-
+! scope="row" | 2
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_sum">Sum</a>
+| Perform indexing
+| Refer to [[http://cs.biu.ac.il/~nlp/downloads/biutee]]
+| * To perform this step, please download BIUTEE's previous version and follow the required steps on the user guide (Section 1.7 and Section 3).
+
+|-
+! scope="row" | 3
+! scope="row" | ALL
+| Run ''EasyFirst'' parser server
+| ''Windows:'' <tt>runeasyfirst.bat</tt><br>''Linux:'' <tt>runeasyfirst.sh</tt>
+| * Must be run on a separate command line window from BIUTEE.
+* The server must be running at least when BIUTEE's LAP/preprocessing is running, but may be left running in other times. The same ''EasyFirst'' run may be used for multiple runs of BIUTEE.
+* You may want to shut it down when it is not required, to conserve system resources. Do it by pressing <tt>Ctrl-C</tt>.
+
+|-
+! scope="row" | 4
+! scope="row" | ALL
+| Configure ''training'' parameters
+| Edit configuration file
+| * Mostly set the dataset to be the devset. More details [[BIUTEE#configuration-file| here]].
+
+|-
+! scope="row" | 5
+! scope="row" | <a href="#interface_eop">EOP</a> + <a href="#input_pairs">Pairs</a>
+| Preprocess training data + Train
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+excitement.BiuteeMain''' 
+-Dexec.args="biutee.xml lap_train,train"</tt></poem>
+| * In order to just preprocess, instead of <tt>lap_train,train</tt> provide only <tt>lap_train</tt>.
+* Similarly, in order to just train, provide only <tt>train</tt>.
+* <a name="preprocess_output">[1]</a> The preprocessing output is a java-serialized file, with a name and path determined by the configuration parameter <tt>rte_pairs_preprocess/ serialization_filename</tt>.
+* <a name="training_output">[2]</a> The training output is several java-serialized files named <tt>labeled_samplesX.ser</tt> and <tt>serialized_resultsX.ser</tt>, and some XML files named <tt>model_search_X.xml</tt> and <tt>model_predictions_X.xml</tt>.
+
+|-
+! scope="row" | 6
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_pairs">Pairs</a>
+| Preprocess training data
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+rtepairs.RTEPairsPreProcessor''' 
+-Dexec.args="biutee_legacy.xml train"</tt></poem>
+| <a href="#preprocess_output">[1]</a>
+
+|-
+! scope="row" | 7
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_pairs">Pairs</a>
+| Train
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.rtepairs.
+RTEPairsETETrainer''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a href="#training_output">[2]</a>
+
+|-
+! scope="row" | 8
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_sum">Sum</a>
+| Preprocess training data
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.rtesum.
+preprocess.RTESumPreProcessor''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a name="preprocess_output_sum">[3]</a> The preprocessing output is a java-serialized file, with a name and path determined by the configuration parameter <tt>rte_sum_preprocess/ serialization_filename</tt>.
+
+|-
+! scope="row" | 9
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_sum">Sum</a>
+| Train
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+rtesum.RTESumETETrainer''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a href="#training_output">[2]</a>
+
+|-
+! scope="row" | 10
+! scope="row" | ALL
+| Configure ''testing'' parameters
+| Edit configuration file
+| * Mostly set the dataset to be the testset. More details [[BIUTEE#configuration-file| here]].
+
+|-
+! scope="row" | 11
+! scope="row" | <a href="#interface_eop">EOP</a> + <a href="#input_pairs">Pairs</a>
+| Preprocess testing data + Test
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+excitement.BiuteeMain''' 
+-Dexec.args="biutee.xml lap_test,test"</tt></poem>
+| * In order to just preprocess, instead of <tt>lap_test,test</tt> provide only <tt>lap_test</tt>.
+* Similarly, in order to just test, provide only <tt>test</tt>.
+* The preprocess output is a series of XML files in the folder <tt>$BIUTEE/workdir/lap_output</tt>. Each XMI is  a dump of the UIMA-CAS of one text-hypothesis pair.
+* <a name="test_output">[4]</a> The test output is written in the log file <tt>logfile.log</tt>.
+
+|-
+! scope="row" | 12
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_pairs">Pairs</a>
+| Preprocess testing data
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+rtepairs.RTEPairsPreProcessor''' 
+-Dexec.args="biutee_legacy.xml test"</tt></poem>
+| <a href="#preprocess_output">[1]</a>
+
+|-
+! scope="row" | 13
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_pairs">Pairs</a>
+| Test
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.rtepairs.
+RTEPairsETETester''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a href="#test_output">[4]</a>
+
+|-
+! scope="row" | 14
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_sum">Sum</a>
+| Preprocess testing data
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.rtesum.
+preprocess.RTESumPreProcessor''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a href="#preprocess_output_sum">[3]</a>
+
+|-
+! scope="row" | 15
+! scope="row" | <a href="#interface_legacy">Legacy</a> + <a href="#input_sum">Sum</a>
+| Test
+| <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java 
+-Dexec.mainClass=
+'''eu.excitementproject.eop.
+biutee.rteflow.systems.
+rtesum.RteSumETETester''' 
+-Dexec.args="biutee_legacy.xml"</tt></poem>
+| <a href="#test_output">[4]</a>
+
+|}
+
+'''NOTES:'''
+# All commands must be run from <tt>$BIUTEE/workdir</tt>. This could be achieved using the <tt>cd</tt> command, like: <tt>cd C:\Biutee\workdir</tt>.
+# For the <tt>mvn</tt> commands to work, you need the Maven executable to be in your system path. If it is not, add it, or provide full path to it in the commands.
+# In order to run via [[Eclipse IDE|http://www.eclipse.org]], perform the specified steps by running each class denoted by <tt>-Dexec.mainClass=</tt>, with program arguments denoted by <tt>-Dexec.args=</tt> (without enclosing parentheses), and working directory <tt>$BIUTEE/workdir</tt>.
+
+=== JVM Parameters ===
+To improve JVM efficiency, it is recommended to run it with these JVM parameters:
+* <tt>-server</tt>, for using Java server VM.
+* <tt>-Xmx2g</tt>, for allocating 2GB of memory. Other values can be used, according to available memory and the number of threads used. When preprocessing at least 1.5GB must be allocated. When training and testing, at least 4GB must be allocated, and an additional 1GB for each additional thread. For example, when using 3 threads, allocate at least 6GB.
+* <tt>-XX:+UseParallelGC</tt>, <tt>-XX:+UseParallelOldGC</tt> and <tt>-XX:ParallelGCThreads=<math>\alpha</math></tt>, for using parallel garbage collection, with a threads. <math>\alpha</math> can be specified as the number of threads determined in the configuration file.
+
+In order to specify JVM parameters, put them as a concatenated value of the environment variable MAVEN_OPTS. More details in one of the notes [[Detailed-manual-for-novice-users#run-it-using-the-maven-exec-plugin | here]].
+
+==Configuration File==
+IMPORTANT NOTE: A copy of the BIUTEE configuration file is available next to the sample configuration files of the other [[EDA]]s of the [[EOP]] in the config directory. Also, another copy is available next to the sample configuration files of the other [[EDA]]s of the [[EOP]] in the [[EOP Resources archive | https://github.com/hltfbk/Excitement-Open-Platform/wiki/EOP-Resources-package]]. However, neither of these copies are effective at the moment. Therefore, please do not edit them. Instead, please apply changes to the original copy, which resides in the workdir directory of the BIUTEE_Environment directory of the [[EOP Resources archive | https://github.com/hltfbk/Excitement-Open-Platform/wiki/EOP-Resources-package]].
+
+A key element in the BIUTEE environment is the configuration file, found at <tt>$BIUTEE/workdir/biutee.xml</tt>. Note that a second configuration file is provided as well: <tt>$BIUTEE/workdir/biutee_legacy.xml</tt>. This has exactly the same content as the main configuration file, but has a slightly different structure - a <tt>section</tt> here is a <tt>module</tt>, and a <tt>property</tt> is a <tt>param</tt>.
+
+Most values in the configuration file can stay exactly as provided. We bring here the details of some of the values you may wish (or need) to change.
+
+
+{|
+|-
+! Section
+! Property
+! Value
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>training_data</tt>
+| Path to a <a href="#input_pairs">pairs</a> dataset XML, for training data.
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>training_data_annotated</tt>
+| true/false - indicates whether the training dataset is annotated (has gold-standard annotations).
+* Must be true for training.
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>training_serialization_filename</tt>
+| Path to a file where preprocessing output will be written to, for training data.
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>test_data</tt>
+| Path to a <a href="#input_pairs">pairs</a> dataset XML, for test data.
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>test_data_annotated</tt>
+| true/false - indicates whether the training dataset is annotated (has gold-standard annotations).
+* If the dataset is annotated, the system will output the test accuracy at the end of the test.
+
+|-
+| <tt>rte_pairs_preprocess</tt>
+| <tt>test_serialization_filename</tt>
+| Path to a file where preprocessing output will be written to, for test data.
+
+|-
+| <tt>rte_sum_preprocess</tt>
+| <tt>dataset</tt>
+| Path to a training <a href="#input_sum">sum</a> dataset folder.
+* Note that this parameter is used for both training and test.
+
+|-
+| <tt>rte_sum_preprocess</tt>
+| <tt>serialization_filename</tt>
+| Path to the file where preprocessing output (of the training data) will be written to.
+* Note that this parameter is used for both training and test.
+
+|-
+| <tt>rte_pairs_train_and_test</tt>
+| <tt>serialized_training_data</tt>
+| Path to the file where preprocessing output (of the training data) was written to.
+
+|-
+| <tt>rte_pairs_train_and_test</tt>
+| <tt>serialized_test_data</tt>
+| Path to the file where preprocessing output (of the test data) was written to.
+
+|-
+| <tt>rte_sum_train_and_test</tt>
+| <tt>training_data</tt>
+| An indication to the <a href="#input_sum">sum</a> training data, as 3 values connected with <tt>#</tt>:
+* Dataset name: <tt>RTE6</tt> or <tt>RTE7</tt>
+* Type: <tt>DEV</tt> or <tt>TEST</tt>
+* Relative path to the dataset folder
+For example: <tt>RTE6#DEV#RTE6_DEVSET</tt>
+
+|-
+| <tt>rte_sum_train_and_test</tt>
+| <tt>serialized_training_data</tt>
+| Path to the file where preprocessing output (of the training data) was written to.
+
+|-
+| <tt>rte_sum_train_and_test</tt>
+| <tt>test_data</tt>
+| An indication to the <a href="#input_sum">sum</a> test data, as 3 values connected with <tt>#</tt>:
+* Dataset name: <tt>RTE6</tt> or <tt>RTE7</tt>
+* Type: <tt>DEV</tt> or <tt>TEST</tt>
+* Relative path to the dataset folder
+For example: <tt>RTE6#TEST#RTE6_TESTSET</tt>
+
+|-
+| <tt>rte_sum_train_and_test</tt>
+| <tt>serialized_test_data</tt>
+| Path to the file where preprocessing output (of the test data) was written to.
+
+
+|-
+| <tt>rte_pairs_train_and_test</tt>, <tt>rte_sum_train_and_test</tt>
+| <tt>threads</tt>
+| Number of threads to be used during training and testing.
+* Preprocessing is always single-threaded.
+* The JVM parameter <tt>-Xmx</tt> must be set according to the number of threads to allow a heap that is large enough. '''If this is not set as required, your system may work very slow, and might crash.''' Usually, 4GB suffices for a single thread, plus 1GB for any additional thread.
+
+|-
+| <tt>transformations</tt>
+| <tt>knowledge_resources</tt>
+| A comma-separated list of knowledge resources, out of these values: ''WORDNET, WIKIPEDIA, GEO, CATVAR, BAP, LIN_DEPENDENCY_ORIGINAL, LIN_PROXIMITY_ORIGINAL, LIN_DEPENDENCY_REUTERS, VERB_OCEAN, ORIG_DIRT, REVERB, BINARY_LIN, FRAMENET, SYNTACTIC''
+<BR><BR>
+These are all values from the enum: <poem><tt>'''eu.excitementproject.eop.
+transformations.
+builtin_knowledge.
+KnowledgeResource'''</tt></poem>
+
+|-
+| <tt>transformations</tt>
+| <tt>multiword_resources</tt>
+| A comma-separated list of '''lexical''' knowledge resources, out of these values: ''WORDNET, WIKIPEDIA, CATVAR, BAP, LIN_DEPENDENCY_ORIGINAL, LIN_PROXIMITY_ORIGINAL, LIN_DEPENDENCY_REUTERS, VERB_OCEAN''.
+* Values are from to the same enum with <tt>true</tt> in their last parameter, except for ''GEO'' (which must not be used here).
+* For these resources, the system shall handle multi-word expressions.
+
+|}
+
+== Visual Tracing Tool ==
+BIUTEE's visual tracing tool assists in tracing various aspects and internal steps of the system. 
+
+If you wish to use the tool, perform these steps:
+# Download and install the program ''GraphViz'' from [[http://www.graphviz.org]].
+# The executable <tt>dot</tt> is installed with the system. Make sure it is in your system's path.
+# Configure parameters in <tt>biutee.xml</tt>, under <tt>rte_pairs_preprocess</tt> and <tt>rte_pairs_train_and_test</tt>.
+# Run: <poem><tt>mvn -f $EOP/biutee/pom.xml exec:java -Dexec.mainClass=
+'''eu.excitementproject.eop.biutee.rteflow.systems.gui.VisualTracingTool''' -Dexec.args="biutee.xml"</tt></poem>
+
+
+==DB-Based Knowledge Resources==
+@TODO: The links for downloading the resources refer now to the old BIUTEE webpage. Refer to new Maven repository.
+
+Some knowledge resources are stored as MySQL tables, provided as compressed <tt>.sql</tt> files. In order to use them:
+
+# Download the resources from the links in the table below. Each file represents one MySQL schema, and may contain several knowledge resources. Note that you don't need to download them all, you may download only the schema files containing the resources you wish to use.
+# Install the free SQL server [[MySQL|http://www.mysql.com]].
+# Install its administration tool [[MySQL Workbench|http://dev.mysql.com/downloads/tools/workbench/]].
+# Run the server.
+# Connect to the server via MySQL Workbench, and in it:
+## Create a user named <tt>db_readonly</tt>, with password <tt>BIUTEE</tt>: ''Users and Privileges --> Add Account''
+## Import the schema files to the database: ''Data Import/Restore --> Import from Dump Project Folder --> (input folder path containing uncompressed <tt>.sql</tt> files) --> Load Folder Contents --> (select all required schemas) --> Start Import''
+## Make sure user <tt>db_readonly</tt> has read (<tt>SELECT</tt>) privileges to all of the tables in the imported schemas.
+# Define an [[BIUTEE#defining-environment-variables|environment variable]] named <tt>MYSQL</tt> with a value referring to the MySQL server address (name or IP address) and port. For example: <tt>dbsql.cs.biu.ac.il:3306</tt>.
+
+
+{|
+|-
+! Schema Name
+! Knowledge Resources in Configuration
+! Schema Download
+! File Size (Compressed)
+
+|-
+| BAP (Directional Similarity)
+| <tt>BAP</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/bap-2.4.1-2012_05_31.sql.bz2]]
+| 111 MB
+
+|-
+| Lin Similarity
+| <tt>LIN_DEPENDENCY_ORIGINAL</tt>, <tt>LIN_PROXIMITY_ORIGINAL</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/lin-2.4.1-2012_05_31.sql.bz2]]
+| 236 MB
+
+|-
+| Original DIRT
+| <tt>ORIG_DIRT</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/original_dirt-2.4.1-2012_05_31.sql.bz2]]
+| 55 MB
+
+|-
+| Wikipedia Knowledge Resource
+| <tt>WIKIPEDIA</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/wikikb-2.4.1-2012_05_31.sql.bz2]]
+| 214 MB
+
+|-
+| Binary Lin, Dependency Reuters
+| <tt>BINARY_LIN</tt>, <tt>LIN_DEPENDENCY_REUTERS</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/distsim-2.4.1-2012_05_31.sql.bz2]]
+| 2.4 GB
+
+|-
+| Framenet
+| <tt>FRAMENET</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/framenet-2.4.1-2012_05_31.sql.bz2]]
+| 228 KB
+
+|-
+| Geo (Geographical Knowledge Resource)
+| <tt>GEO</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/geo-2.4.1-2012_05_31.sql.bz2]]
+| 1.4 MB
+
+|-
+| ReVerb (Distributional Similarity with Global Constraints)
+| <tt>REVERB</tt>
+| [[Download|http://u.cs.biu.ac.il/~nlp/downloads/biutee/ver-2.4.1/db/reverb-2.4.1-2012_05_31.sql.bz2]]
+| 161 MB
+
+|}
+
+
+==Log File==
+The system uses the log4j platform for logging. A log4j properties file is automatically created under <tt>$BIUTEE/workdir/log4j.properties</tt> with recommended values. If a file under that name already exists, the system uses it instead of creating a new one. There is no need to change any of the definitions in the file, but you may do so if you wish to change logging behavior. You may be assisted by the [[log4j Manual|http://logging.apache.org/log4j/2.x/manual/index.html]].
+
+Under the recommended values, a new log file is created for every run of the system in <tt>$BIUTEE/workdir/logfile.log</tt>. If this file already exists from a previous run, it is renamed to <tt>logfile.log_''date''_''time''.log</tt>.

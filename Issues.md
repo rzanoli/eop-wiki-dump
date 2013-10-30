@@ -1,0 +1,1 @@
+The issue tracking system of the project is used by all users and developers for both reporting the discovered software bugs and requesting a new feature. EOP uses the GitHub integrated issue tracking system that is available at: https://github.com/hltfbk/Excitement-Open-Platform/issues

@@ -1,0 +1,130 @@
+Code for English lexical resources is located in "core" project.
+The actual resources code is in sub-packages of eu.excitementproject.eop.core.component.lexicalknowledge.
+
+===Distributional Similarity===
+
+---------
+'''Resource name: Dekang Lin's dependency-based thesaurus'''
+
+'''Implementation''': ''LinDependencyOriginalLexicalResourse''
+
+'''Resource description''': Resource was downloaded from Dekang Lin's website, [http://webdocs.cs.ualberta.ca/~lindek/downloads.htm], but is not available there anymore. "Dependency-based thesaurus. This contains a list automatically constructed thesaurus. For each word, the thesaurus lists up to 200 most similar words and their similarities. The similar words are clustered (also automatically)."
+
+'''POS''': nouns (n), verbs (v), adjectives & adverbs (a)
+
+'''Ref to relevant Paper''': “Automatic Retrieval and Clustering of Similar Words”, Dekang Lin, COLING-ACL, 1998, pp. 768-774.
+
+'''DB Scheme''': lin (qa-srv:3308)
+
+'''DB tables''': lin_dep_n, lin_dep_v, lin_dep_a
+
+---------
+'''Resource name: Dekang Lin's proximity-based thesaurus'''
+
+'''Implementation''': ''LinProximityOriginalLexicalResource''
+
+'''Resource description''': Resource is available for download from Dekang Lin's website, [http://webdocs.cs.ualberta.ca/~lindek/downloads.htm]. "Proximity-based thesaurus. Similar to the dependency-based thesaurus. But the words similarity is computed based on the linear proximity relationship between words only, where as the above thesaurus used dependency relationships extracted from a parsed corpus."
+
+'''POS''': nouns (n), verbs (v), adjectives & adverbs (a)
+
+'''Ref to relevant Paper''': “Automatic Retrieval and Clustering of Similar Words”, Dekang Lin, COLING-ACL, 1998, pp. 768-774.
+
+'''DB Scheme''': lin (qa-srv:3308)
+
+'''DB tables''': lin_proximity
+
+-----------
+'''Resource name: Lin distributional similarity for Reuters'''
+
+'''Implementation''': ''LinDistsimLexicalResource'' 
+
+'''Resource description''': A resourse of distributional similarity rules calculated with Idan's dist.sim. code using Lin's measure (without clustering) over the Reuters RCV1 corpus with dependency-based features. 
+
+'''POS''': nouns
+
+'''Ref to relevant Paper''': “Automatic Retrieval and Clustering of Similar Words”, Dekang Lin, COLING-ACL, 1998, pp. 768-774.
+
+'''DB Scheme''': distsim (qa-srv:3308)
+
+'''DB tables''': lin_rules_lemmas
+
+-----------
+'''Resource name: DIRECT-200 / DIRECT-1000'''
+
+'''Implementation''': ''Direct200LexicalResource'' / ''Direct1000LexicalResource'' 
+
+'''Resource description''': Directional similarity rules calculated using the balancedAP (bap) measure over Reuters RCV1 corpus with dependency-based features. Downloabable from our homepage ([http://u.cs.biu.ac.il/~nlp/downloads/DIRECT.html])
+
+Direct1000LexicalResource - up to 1000 similarity rules per right-hand-side term (nouns and verbs)
+
+Direct200LexicalResource - a part from the above, limited to up to 200 rules per term
+
+'''POS''': nouns & verbs
+
+'''Ref to relevant Paper''': 
+
+(1) Lili Kotlerman, Ido Dagan, Idan Szpektor and Maayan Zhitomirsky-Geffet. Directional Distributional Similarity for Lexical Inference. Special Issue of Natural Language Engineering on Distributional Lexical Semantics (JNLE-DLS), 2010. 
+
+(2) Lili Kotlerman, Ido Dagan, Idan Szpektor and Maayan Zhitomirsky-Geffet. Directional Distributional Similarity for Lexical Expansion. In Proceedings of ACL (short papers), 2009.
+
+'''DB Scheme''': bap (qa-srv:3308)
+
+'''DB tables''': direct_nouns_200, direct_verbs_200 / direct_nouns_1000, direct_verbs_1000
+
+===Manual ontologies===
+
+-----------
+
+
+'''Resource name: WordNet'''
+
+'''Implementation''': ''WordnetLexicalResource''
+
+'''Resource description''': Uses WordNet relations which correspond to lexical entailment.
+
+'''Ref to relevant Paper''': 
+Fellbaum, Christiane, ed. 1998. WordNet An Electronic Lexical Database. The MIT Press.
+
+-----------
+
+'''Resource name: Wiktionary''' 
+
+'''Implementation''': ''WiktionaryLexicalResource''
+
+'''Resource description''': Uses Wikitionary relations to retrieve lexical entailment. See http://en.wiktionary.org/wiki/Wiktionary:Main_Page
+
+-----------
+
+'''Resource name: Wikipedia''' 
+
+'''Implementation''': ''WikiLexicalResourcee''
+
+'''Resource description''': Lexical rules that were extracted automatically from English Wikipedia
+
+'''Ref to relevant Paper''': 
+Eyal Shnarch, Libby Barak, Ido Dagan. Extracting Lexical Reference Rules from Wikipedia. ACL, 2009.
+
+-----------
+
+'''Resource name: VerbOcean''' 
+
+'''Implementation''': ''VerbOceanLexicalResource''
+
+'''Resource description''': Extract lexical entailment rules from VerbOcean.
+
+'''Ref to relevant Paper''': 
+Timothy Chklovski and Patrick Pantel. 2004.VerbOcean: Mining the Web for Fine-Grained Semantic Verb Relations. In Proceedings of Conference on Empirical Methods in Natural Language Processing (EMNLP-04). Barcelona, Spain.
+-----------
+
+'''Resource name: Catvar''' 
+
+'''Implementation''': ''CatvarLexicalResource''
+
+'''Resource description''': Extract lexical entailment rules from CatVar
+
+'''Ref to relevant Paper''': 
+Habash, Nizar and Bonnie Dorr, A Categorial Variation Database for English, Proceedings of the North American Association for Computational Linguistics, Edmonton, Canada, pp. 96--102, 2003
+
+
+
+

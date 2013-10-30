@@ -1,0 +1,4 @@
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />All contents on this Wiki are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+
+## Disclaimer
+Non of the [[partners of the EU project EXCITEMENT | http://www.excitement-project.eu/index.php/partners]] are responsible for any damage directly or indirectly caused to the user or his/her properties by using these instructions.

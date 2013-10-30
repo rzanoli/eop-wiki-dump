@@ -1,0 +1,177 @@
+If you need a '''quick user manual''', please read the [[Quick manual for novice users | Quick (15-minutes) manual]]. If you are already familiar with this system, i.e., you are an advanced user, please refer to [[Advanced-users | the advanced users' manual]].
+
+'''NOTE: As soon as you face any issue, which might be a bug, i.e. a software defect, a feature which is not yet supported or any other problem that is caused due to the lack of clarity in the documentation, etc. please do not hesitate to report the issue by creating a new issue in the [[issue tracking system | https://github.com/hltfbk/Excitement-Open-Platform/issues]].'''
+
+== Introduction ==
+As regards the EOP system architecture the most important top-level distinction is between the Linguistic Analysis Pipeline ([[LAP]]) and the [[Entailment Core]]. We separate these two parts in order to (a), on a conceptual level, ensure that the algorithms in the [[Entailment Core]] only rely on linguistic analyses in well-defined ways; and (b), on a practical level, make sure that the [[LAP]] and the [[Entailment Core]] can be run independently of one another (e.g.,to preprocess all data beforehand).
+
+Since it has been shown that deciding [[entailment]] on the basis of unprocessed text is a very difficult
+endeavor, the Linguistic Analysis Pipeline ([[LAP]]) is essentially a series of annotation modules that provide linguistic annotation on various layers for the input. The [[Entailment Core]] then performs the actual [[entailment]] computation on the basis of the processed text.
+
+The [[Entailment Core]] itself can be further decomposed into exactly one Entailment Decision Algorithm
+([[EDA]]) and zero or more [[Components]]. An Entailment Decision Algorithm ([[EDA]]) is a special Component which computes an [[entailment]] decision for a given [[Text/Hypothesis pair]]. Trivially, each complete Entailment Core is an [[EDA]]. However, the goal of EXCITEMENT is exactly to identify functionality within [[Entailment Cores]] that can be re-used and, for example, combined with other [[EDA]]s. Examples of functionality that are strong candidates for [[Components]] are [[WordNet]] (on the [[knowledge]] side) and [[distance]] computations between text and hypothesis (on the [[algorithmic]] side). Both of these can be combined with [[EDA]]s of different natures, and should therefore be encapsulated in [[Components]].
+
+=== Supported Platforms ===
+The following instructions are for Debian (6.0) and Ubuntu (13.04) GNU/Linux distributions on the Intel x86 - 64 bits / amd64 hardware architectures. However, it might be possible to adapt them to a number of other platforms as well. Especially, because the majority of the [[EOP]] code is written in Java and therefore it is platform-independent.
+
+=== Prerequisites ===
+The software mentioned below should be already installed on your machine:
+
+* [[Java Development Kit (JDK) 1.7 | http://www.oracle.com/technetwork/java/javase/downloads/index.html]] (Please note that JDK 1.6 might not work).
+* [[Apache Maven 3.0.x | http://apache.mirror.digionline.de/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz]] (Please note that Apache Maven 2.x might not work).
+
+=== Hardware Requirements ===
+The [[BIUTEE]] EDA is the most hardware resource intensive part of the [[EOP]]. Therefore, please consider [[its hardware requirements mentioned here | https://github.com/hltfbk/Excitement-Open-Platform/wiki/BIUTEE#system-requirements]].
+
+Moreover, the [[Edit Distance | https://github.com/hltfbk/Excitement-Open-Platform/wiki/EditDistanceEDA]] EDA and the [[TIE | https://github.com/hltfbk/Excitement-Open-Platform/wiki/MaxEntClassificationEDA]]  (MaxEntClassification) EDA require [[standard PC hardware]].
+
+== How to Download and Build the EOP ==
+Please read [[this page | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Various-eop-distributions]] in order to obtain more information about the various EOP distribution types and their intended audience: [[https://github.com/hltfbk/Excitement-Open-Platform/wiki/Various-eop-distributions]]
+
+One type of the [[EOP]] distribution releases is for those users who are not aiming at building the [[EOP]] from its source code, but instead directly downloading the binary release. Another type is for those users who are going to build the EOP source code on their own system using Maven. Moreover, there's another kind of the EOP release, which is for those users who will only use the Maven artifacts of the EOP available via the FBK artifactory and in future, also from the Maven Central repository.
+
+=== Download the EOP Binary Release (No build required) ===
+
+If you do not want to build the [[EOP]] on your own system, you may easily download the binary release either by visiting the [[EOP website | http://hltfbk.github.io/Excitement-Open-Platform/]] and downloading the latest Binary release (go to the Try it menu and choose Latest Release (Binaries)) or by using the following direct link. Then, [[unpack the tar.gz archive]] in a directory. 
+
+Because you have not downloaded the source code, but instead the binary release, you do not need [[Maven]] to build the [[EOP]]. Hence, you could jump to [[the next part | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users#how-to-add-the-additional-resources]].
+
+[[http://hlt-services4.fbk.eu:8080/artifactory/repo/eu/excitementproject/EOP-release/1.0.2/EOP-release-1.0.2-bin.zip]]
+
+=== Download the EOP Source Code ===
+In order to download the full source code of the latest [[EOP]] release, please either visit the [[EOP website | http://hltfbk.github.io/Excitement-Open-Platform/]] (go to the Try it menu and choose Latest Release (Source)) and download the latest release or use the direct links below:
+
+[[https://github.com/hltfbk/Excitement-Open-Platform/tarball/release (tar Archive) | https://github.com/hltfbk/Excitement-Open-Platform/tarball/release]]
+
+or
+
+[[https://github.com/hltfbk/Excitement-Open-Platform/zipball/release (zip archive) | https://github.com/hltfbk/Excitement-Open-Platform/zipball/release]]
+
+
+=== Download the Maven Artifacts of the EOP ===
+
+Alternatively, if you need the Maven artifacts of the [[EOP]] releases, you may download them from the [[FBK Maven repository | http://hlt-services4.fbk.eu:8080/artifactory]]:
+
+[[http://hlt-services4.fbk.eu:8080/artifactory/repo/eu/excitementproject/]]
+
+(@TODO: WP8, upload each major distribution release artifacts to the [[Maven Central repository | http://mvnrepository.com/]] as well.)
+
+=== Build the EOP Source Code ===
+After downloading the source code of the latest [[EOP]] release from the [[EOP website | http://hltfbk.github.io/Excitement-Open-Platform/]], [[unpack the tar.gz archive]] in a directory (let's assume the path of that directory is $EOP), open a terminal (i.e. shell or command line) and change directory to $EOP using the cd command. Then, build the [[EOP]] using the Maven command below:
+
+mvn -Dmaven.test.skip=true package assembly:assembly
+
+NOTE: Building the EOP with the above mentioned command skips the tests to reduce the build-time. However, if you would like to avoid this, please run the following command instead:
+
+mvn package assembly:assembly
+
+== How to Add the Additional Resources ==
+Please download the additional resources either by visiting the [[EOP website | http://hltfbk.github.io/Excitement-Open-Platform/]] and downloading the EOP resources package (go to the Try it menu and choose EOP Resources) or by using the following direct link:
+http://hlt-services4.fbk.eu:8080/artifactory/repo/eu/excitementproject/eop-resources/1.0.2.tar/eop-resources-1.0.2.tar.gz
+
+In the [[following sections, you will see | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users#run-the-eop-using-java-on-the-command-line]] where you should put this package in order to run the [[EOP]] properly.
+
+The [[EOP Resources package]] includes the [[knowledge resources]], the [[configuration files]], the [[models]], the [[datasets]], the [[databases]], etc. As a novice user, you should not care about them. You may easily download all of them in one package (called eop-resources) and follow the instructions below.
+
+However, please note that from the license agreements point of view, the [[EOP]] has two kinds of [[knowledge resources]]: the [[GPL-v3-compatible]] ones and the [[GPL-v3-incompatible]] ones. The former is already included in that all-in-one package (called eop-resources), while the latter should be downloaded and installed (as instructed below) by the end user after reading and accepting the corresponding end-user license agreements. More details about the platform license and the license agreements of the knowledge resources is available here:
+https://github.com/hltfbk/Excitement-Open-Platform/wiki/Platform-license
+
+=== The GPL-v3-compatible Resources ===
+
+The knowledge resources which have got GPL-v3-compatible license agreements are already included in the above mentioned EOP resources package. Therefore, the user should not do anything for them.
+
+=== The GPL-v3-Incompatible Resources ===
+
+There exist few knowledge resources which their license agreements do not allow us to distribute them in the EOP resources package. The end user must download and install them after reading and accepting their license agreements. In what follows, we instruct how to do this.
+
+==== TextPro ====
+TextPro ([[http://textpro.fbk.eu/]]) is a suite of modular Natural Language Processing (NLP) tools for analysis of Italian and English texts. The suite has been designed so as to integrate and reuse state of the art NLP components developed by researchers at FBK. The current version of the tool suite provides functions ranging from tokenization to chunking, parsing and Named Entity Recognition (NER). Distributions for Linux and Mac are available, for both research (it is free of charge) and commercial purposes (it is not free of charge). Details on how to install TextPro can be found in its distribution package.
+
+NOTE: As a results of the dual license situation, when a request is sent to FBK (the copyright holder), the office which is dedicated to the licenses checks the request and evaluates it to see whether it is compatible with the use one wants to make of it. There is not any possibilities to bypass this mechanism. Therefore, from the time that you submit the license request via the FBK website, it might generally take a couple of business days until you receive the download link. Please be patient.
+
+==== TreeTagger ====
+Some Lexical linguistic pipelines (LAPs) are utilizing TreeTagger; notably German pipelines. Due to license issue, we cannot re-distribute TreeTagger binaries or models with EXCITEMENT open platform. Installing TreeTagger for EXCITEMENT is actually simple. Follow the instructions in [[TreeTagger Installation]].  
+
+NOTE: If you are using the binary distribution release of the [[EOP]] (i.e. you are not using Maven for building the [[EOP]]) you would not be able to use the above mentioned simplified mechanism for installing Tree Tagger. In this case, you should either avoid using those configurations which need Tree Tagger or install it on own.
+
+==== GermaNet ==== 
+[[ GermaNet | http://www.sfs.uni-tuebingen.de/GermaNet/]] is lexical semantic network for German language. It is quite similar to English WordNet, and can provide various important relations for textual inference in German. However, GermaNet is not a open resource. You have to get a [[license from University of Tuebingen| http://www.sfs.uni-tuebingen.de/GermaNet/licenses.shtml]]. For academic institutes, this can be free. For other purposes, this is not free. 
+
+Once you got the license and GermaNet files, you can install them anywhere you like. The only information needed by EOP GermaNet access is the path to this installation. GermaNet is accessed from EOP by the class GermaNetWrapper. It needs the path to Germanet XML files (e.g. [path]/GN_V70_XML/). The path can be passed to the class via its constructor, or via a configuration. To see those examples, please check the test class "/eop/core/GermaNetWrapperMiniTest.java".
+
+== How to Run the EOP ==
+
+In its current situation, the [[EOP]] supports 3 Entailment Decision Algorithms ([[EDA]]s):
+
+ * The [[BIUTEE]] EDA
+ * [[The EDITS (Edit Distance) EDA | https://github.com/hltfbk/Excitement-Open-Platform/wiki/EditDistanceEDA]]  
+ * [[The TIE (MaxEntClassification) EDA | https://github.com/hltfbk/Excitement-Open-Platform/wiki/MaxEntClassificationEDA]]
+
+The EOP needs an XML configuration file, which specifies the chosen [[EDA]], the [[LAP]], the settings, etc. A number of sample configuration files are provided in the [[config]] directory of the EOP source code and release as well as in the [[configuration-files]] directory of the [[eop-resources archive]]. As a novice user, you should not care about the config files. You may use a simple one like the one shown in the commands below. Once you learned the basics, please read [[the advanced users' manual (Supported Entailment Decision Algorithms (EDAs)) | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Advanced-users#supported-entailment-decision-algorithms-edas]] to obtain more information about the configuration files.
+
+In order to run the EOP with the [[BIUTEE]] EDA, please follow the instructions here:
+[[https://github.com/hltfbk/Excitement-Open-Platform/wiki/BIUTEE]]
+
+To run the EOP with [[the EDITS (Edit Distance) EDA | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Edits]] and [[the TIE (MaxEntClassification) EDA | https://github.com/hltfbk/Excitement-Open-Platform/wiki/MaxEntClassificationEDA]], please follow the instructions below.
+
+=== Run the EOP Using Java on the Command Line ===
+If in the previous steps, you have downloaded the full source code of the [[EOP]] and have built it using Maven, then you should change directory (using the cd command) to the generated directory called target and unpack the created ZIP archive of the EOP binaries there. A new directory with the same name as the release name will be created there, which contains a number of JAR files. Moreover, put the unpacked eop-resources archive that you have downloaded in the previous section, in the target directory.
+
+However, if you have downloaded the binary release of the [[EOP]], you should just simply unpack that archive. Similarly, a new directory with the same name will be created there, which contains a number of JAR files. Moreover, '''put the unpacked eop-resources archive that you have downloaded in the previous section, next to the release directory'''.
+
+The easiest way to run the [[EOP]] is using its main class called Demo in the GUI package. You should run the Demo class of the [[EOP]] with a number of command-line options like below. Feel free to change the text and hypothesis to the ones you would like to have.
+
+<source lang="java">
+java -Djava.ext.dirs=EOP-1.0.2/ eu.excitementproject.eop.gui.Demo -config eop-resources-1.0.2/configuration-files/MaxEntClassificationEDA_Base_EN.xml -test -text "Hubble is a telescope" -hypothesis "Hubble is an instrument" -output eop-resources-1.0.2/results/
+</source>
+
+An XML file called result.xml is created, which contains the Entailment / Non-Entailment
+information.
+
+You can choose to do:
+*''training'' -- include the options '''-train''' (no argument) and '''-trainFile file''', where ''file'' is a training file in RTE3 data format. The result of training is a file containing the model, stored under the name specified in the configuration file. 
+*''single pair testing'' -- include the options '''-test''' (no argument) and '''-text "your text between double quotes here" ''' and '''-hypothesis "your hypothesis text between double quotes here" ''';
+*''file testing'' -- include the options '''-test''' (no argument) and '''-testFile file''', where ''file'' is a test file in RTE3 data format;
+*combination of training and testing (either on a single pair or a file)
+
+NOTE 1: If you choose to perform only testing, you must ensure that the model specified in the configuration file exists. Alternatively, if you do training, there should be no model with the same name as the one specified in the configuration file, the system will not rewrite existing models.
+
+NOTE 2: For the system to find the model files, you should either:
+* run the command from the parent directory of eop-resources
+* replace the (currently relative) path of the model in the configuration file with an absolute path (according to your set-up)
+
+Sample command for training & testing on a single pair:
+
+<source lang="java>
+java -Djava.ext.dirs=EOP-1.0.2/ eu.excitementproject.eop.gui.Demo -config eop-resources-1.0.2/configuration-files/MaxEntClassificationEDA_Base_EN.xml -train -trainFile eop-resources-1.0.2/data-set/English_dev.xml -test -text "Hubble is a telescope." -hypothesis "Hubble is an instrument." -output eop-resources-1.0.2/results/
+</source>
+
+Sample command for training & testing on a file:
+
+<source lang="java">
+ java -Djava.ext.dirs=EOP-1.0.2/ eu.excitementproject.eop.gui.Demo -config eop-resources-1.0.2/configuration-files/MaxEntClassificationEDA_Base_EN.xml -train -trainFile eop-resources-1.0.2/data-set/English_dev.xml -test -testFile eop-resources-1.0.2/data-set/English_test.xml -output eop-resources-1.0.2/results/
+</source>
+
+An XML file called result.xml will be created, which contains the Entailment / Non-Entailment information and another XML file named report.xml is also created, which contains the evaluation
+information.
+
+=== Run the EOP Using the Maven Exec Plugin ===
+
+You can also call the application class with the help of Maven. This could be a proper option if you are expecting to modify and recompile the code in the future. 
+
+Exec plugin lets you call any class in the project (if it has Main), with all classpath properly set according to the POM by Maven. Once the project is built (e.g. by "mvn package" command) you can invoke Exec. The usage is like followings:  
+
+<source lang="java">
+mvn -f [path]/pom.xml exec:java -Dexec.mainClass=[Main class name] -Dexec.args="[arguments to Main()]". 
+</source> 
+
+* JVM options: Note that "exec:java" uses the same JVM of Maven. That is, it does not invoke additional JVM, but runs within Maven's invocation of JVM. Thus, if you want to pass any JVM argument, you have to pass the argument to Maven, directly. This is done by setting environment variable MAVEN_OPTS (E.g. >export MAVEN_OPTS="-Xmx5G"). Check [[Maven download & setup hints| http://maven.apache.org/download.cgi]] from the official Maven site, about this MAVEN_OPTS variable and setting it in your OS/environment. 
+* Working Dir: Working directory (user.dir) is set as current directory, and not POM directory. Thus, you can simply chdir to the target directory and invoke Maven exec:java there to set your own working dir. 
+
+As an example, the previous demo class example ("Hubble as instrument") can be called identically by the following command: 
+<source lang="java"> 
+mvn -f [project path]/gui/pom.xml exec:java -Dexec.mainClass=eu.excitementproject.eop.gui.Demo -Dexec.args="-dir eop-resources/configuration-files/ -language EN -activatedEDA MaxEntClassificationEDA -resource AllLexRes -text \"Hubble is a telescope\" -hypothesis \"Hubble is an instrument\" -output ./" 
+</source> 
+(Notice that the \" to escape quote mark within -Dargs). 
+
+The main difference of the two command-line invocation methods is that EXEC plugin does not export the project and its depending Jars to file system. Thus, EXEC method is more suited for calling/testing when you are working with Maven.

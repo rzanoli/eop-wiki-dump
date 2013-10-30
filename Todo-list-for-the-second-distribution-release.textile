@@ -1,0 +1,33 @@
+Latest Release: EOP v1.0.0, release on Monday 01.07.2013
+Next Release: EOP v1.0.1, release date: Monday 08.07.2013
+
+
+## EOP Distribution Release v1.0.1
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+
+## EOP Distribution Release v1.2.x
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+
+## EOP Distribution Release v1.4.x
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+
+## EOP Distribution Release v1.6.x
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+
+## EOP Distribution Release v1.8.x
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+
+@TODO: Make the TODO list more fine-grained, by separating the tasks in the tables above.
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline |_. Status (open/in progress/done) |_. Overtime |
+|<. Upload the EOP Maven artifacts to the Maven central repository too |<. DFKI and FBK |<. July 2013 | open |  |
+|<. [[The automated release creation process | https://github.com/hltfbk/Excitement-Open-Platform/wiki/How-do-we-make-a-new-release%3F]] |<. DFKI and FBK |<. July 2013 | open |  |
+|<. Extend the limited functionality of EDITS in the first distribution for the 2nd one |<. FBK |<. Month 19 (i.e. July 2013) to Month 27 | open |  |
+|<. Try to automate and ease the installation process or e.g. provide virtual machine images, SAAS (cloud), etc. |<. DFKI and FBK |<. Month 19 (i.e. July 2013) to Month 27 | open |  |
+|<. Make the pre-run configuration and running of the BIUTEE EDA and LAP, more uniform with the rest of the platform (i.e. EDITS and TIE), as far as possible  |<. BIU and FBK |<. Month 19 (i.e. July 2013) to Month 27 | open |  |
+|<. [[Doc: How to add a new linguistic analysis pipeline | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Developers]] |<. HEI (Gil) |<. Month 19 (i.e. July 2013) to Month 27 | open |  |

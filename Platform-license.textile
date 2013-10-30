@@ -1,0 +1,60 @@
+EXCITEMENT Open Platform is released under the terms of [[General Public License (GPL) version 3 | http://www.gnu.org/licenses/gpl.html]].
+
+***
+
+The platform can be configured to use different pipelines to process the data sets (e.g. OpenNLP) and different tools and resources (e.g. WordNet) to annotate the data to be annotated. Pipelines, tools, and resources can have licences that are compatible or not compatible with General Public License (GPL) version 3 according to the tables below:
+
+Lib=library, Resource=additional resources (knowledge resources, parsers, tools, etc.)
+
+Table 1: GPL-v3-incompatible ones:
+
+{background:#ddd}. |_. No. |_. Item |_. Lib/Resource |_. License |_. Usecase/Comments |
+|<. 1 |<. GermaNet |<. Resource  |<. [[It's own license | http://www.sfs.uni-tuebingen.de lsd/licenses.shtml]] |<. Similar to the English (Princeton) WordNet, provides entailment rules for German |
+|<. 2 |<. TextPro |<. Resource  |<. [[It's own license | http://textpro.fbk.eu/download-textpro.html]] |<. NLP analysis for English and Italian |
+|<. 3 |<. TreeTagger |<. Resource (tool) |<. [[It's own license | http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/Tagger-Licence]] (The copyright owner, Mr. Helmut Schmid, has permitted the EXCITEMENT project to redistribute the binaries with the EOP.) |<. German Processing |
+|<. 4 |<. JWKTL |<. lib |<. [[http://www.ukp.tu-darmstadt.de/software/jwktl]] <br>"t the moment, JWKTL is not GPL-compatible, as it is not available as open-source software. However, we plan to release the software soon (possibly in July/August?). So far, we planned to use the Apache License, which would (as far as I know) allow using JWKTL in your GPL software. Please also study the license of the Berkeley DB, which is being used by JWKTL and might imply transitive conditions. Should be no problem though, but still needs consideration" (Christian Meyer)|<. - |
+|<. 5 |<. Lingpipe |<. lib |<. [[http://alias-i.com/lingpipe/web/licensing.html]] <br> "It is not considered to be GPL-v3 compatible but we will very likely adopt the AGPL in the near future. If there is a good reason to move more quickly let me know. I expect within the next 60 days." (Breck Baldwin) |<. - |
+|<. 6 |<. JUnit |<. lib |<. Common Public License |<. - |
+|<. 7 |<. jni-svmlight |<. lib |<. [[http://morphix-nlp.berlios.de/manual/node48.html]] <br>"the code is not GPL. But it is free for research and teaching" (Thorsten Yoachim)" |<. - |
+|<. 8 |<. CatVar |<. Resource  |<. According to Mr. Nizar Habash's reply, the license is going to soon change to GPLv-3 compatible. Previous (and current) license: Open Software License version 1.1 (Mutual Termination for Patent Action: This License shall terminate automatically and You may no longer exercise any of the rights granted to You by this License if You file a lawsuit in any court alleging that any OSI Certified open source software that is licensed under any license containing this “Mutual Termination for Patent Action” clause infringes any patent claims that are essential to use that software.) |<. Uninflected words (lemmas) and their categorical (i.e., part-of-speech) variants |
+
+
+Table 2: GPL-v3-compatible ones:
+
+{background:#ddd}. |_. No. |_. Item |_. Lib/Resource |_. License |_. Usecase/Comments |
+|<. 1 |<. VerbOcean |<. Resource |<. No limitations were declared |<. Various semantic relations between verbs |
+|<. 2 |<. WordNet (English) |<. Resource |<. BSD-like: [[WordNet License | http://wordnet.princeton.edu/wordnet/license/]] |<. Entailment rules for English |
+|<. 3 |<. Italian MultiWordNet |<. Resource |<. Creative Commons Attribution 3.0 Unported License |<. Similar to the English (Princeton) WordNet, provides entailment rules for Italian |
+|<. 4 |<. Lin proximity-based |<. Resource |<. No limitations were declared |<. Distributional similarity rules for English nouns, verbs, adjectives and adverbs |
+|<. 5 |<. Lin similarity-based |<. Resource |<.  No limitations were declared |<. Distributional similarity rules for English nouns, verbs, adjectives and adverbs |
+|<. 7 |<. Lin similarity-based, Reuters |<. Resource |<. MIT |<. Distributional similarity rules for English nouns |
+|<. 8 |<. Directional similarities |<. Resource |<. MIT |<. Directional similarity rules for English nouns and verbs |
+|<. 9 |<. Wikipedia (EN) |<. Resource |<. MIT |<. Entailment rules for English nouns |
+|<. 10 |<. Geo |<. Resource |<. MIT |<. Geographic resource: each location entails its location entities |
+|<. 11 |<. Wikipedia (IT) |<. Resource |<. MIT |<. Entailment rules for Italian nouns |
+|<. 12 |<. libSVM |<. lib |<. LGPL |<. Support Vector Machines (SVM) |
+|<. 13 |<. OpenNLP |<. lib |<. Apache v2.0 |<. NLP |
+|<. 14 |<. MST Parser |<. lib |<. Apache v2.0 |<. - |
+|<. 15 |<. UIMA |<. lib |<. Apache v2.5 |<. Unstructured Information Management applications |
+|<. 16 |<. Stanford Parser |<. lib |<. GPL |<. - |
+|<. 17 |<. ArkRef |<. lib |<. MIT |<. - |
+|<. 18 |<. Commons-lang |<. lib |<. Apache v2.0+ |<. - |
+|<. 19 |<. Apache-servicemix-bundles-collections |<. lib |<. Apache |<. - |
+|<. 20 |<. extJwnl |<. lib |<. BSD |<. - |
+|<. 21 |<. Jwnl |<. lib |<. BSD |<. - |
+|<. 22 |<. Stanford-NER |<. lib |<. GPL |<. - |
+|<. 23 |<. Apache Lucene |<. lib |<. Apache v2.0+ |<. - |
+|<. 24 |<. Stanford-Pos-Tagger |<. lib |<. GPL |<. - |
+|<. 25 |<. Open-NLP tools |<. lib |<. Apache v2.0+ |<. - |
+|<. 26 |<. Gate |<. lib |<. AGPL |<. - |
+|<. 27 |<. JOrtho |<. lib |<. GPL |<. - |
+|<. 28 |<. MySQL Connector |<. lib |<. GPL |<. - |
+|<. 29 |<. Easy-First |<. lib |<. GPL |<. - |
+|<. 30 |<. Sebastian Nagel sentence-splitter |<. lib |<. GPL |<. - |
+|<. 31 |<. supersense-tagger |<. lib |<. Apache license V2.0 |<. - |
+|<. 32 |<. JWI |<. lib |<. [[http://projects.csail.mit.edu/jwi/license.html]] <br> "JWI is free to use for all purposes (commercial or otherwise), doesn't rely on any 3rd party libraries, and all the source code is available.  It's licensed under Creative Commons CC-BY, which to my understanding only requires users to grant credit where credit is due; it allows derivative works and commercial use at no charge.  I think this fits with GPL, but, again, I'm not a lawyer.
+I will certainly not complain if you use JWI in your project, whatever it is, as long as you credit me for JWI." (Mark Finlayson)|<. - |
+|<. 33 |<. Biu-normalizer |<. lib |<. Free to use, no guarantee (code cleanup and bug fixes are required) |<. - |
+|<. 34 |<. Morph-Adorner |<. lib |<. [[http://morphadorner.northwestern.edu/morphadorner/licenses/]] <br> The principal license for MorphAdorner is the NCSA license. This license is based on the terms of the Expat and modified BSD licenses. It is a lax, permissive non-copyleft free software license, compatible with the GNU GPL. On the other hand, many of the libraries used by MorphAdorner have their own licenses as noted on that page as well: http://morphadorner.northwestern.edu/morphadorner/licenses/#thirdpartylicenses|<. - |
+|<. 35 |<. German DEWac 1k/10k dist sim |<. Resource |<. - |<. Data kept internally in JAR |
+|<. 36 |<. German Derivational Lexical resource |<. Resource |<. - |<. Data kept internally in JAR |

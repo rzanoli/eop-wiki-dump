@@ -1,0 +1,5 @@
+This page provides information about the resources available for Italian language processing.
+
+==Italian WordNet==
+
+Currently the EXCITEMENT platform provides functionality that uses the Italian version of WordNet, available by request from [[FBK|http://multiwordnet.fbk.eu/english/home.php]]. The users must install this resource themselves, and edit the multiwordnet.properties file that comes part of the EOP release to reflect their set-up (in particular, they must provide mysql user and password information, because installing the Italian WordNet implies populating a database). The platform contains the JMWN library, which is a Java interface to the resource.

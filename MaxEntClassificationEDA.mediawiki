@@ -1,0 +1,205 @@
+<tt>MaxEntClassificationEDA</tt> is an Entailment Decision Algorithm (EDA) based on a prototype system called TIE (Textual Inference Engine), which is developed and maintained by [[Rui Wang|http://www.coli.uni-saarland.de/~rwang/]] and his colleagues in the [[Language Technology (LT) lab of DFKI GmbH|http://www.dfki.de/lt/]].
+
+Notice that technically running <tt>MaxEntClassificationEDA</tt> does not require additional installation or building steps apart from [[Detailed-manual-for-novice-users|setting up the EOP]]. Also, among the knowledge resources that should be manually installed by the users (explained [[here in the manual | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users#the-gpl-v3-incompatible-resources]]), we highly recommend the users to [[Treetagger-installation | install TreeTagger]] in order to use most of the components described below. Other required knowledge resources for each of the configurations are described below.
+
+Here are the configurations you could setup for <tt>MaxEntClassificationEDA</tt>.
+
+==Configuration File==
+There is a list of pre-defined configuration files which can be found at <tt>/config</tt> and also in the eop-resources archive at <tt>eop-resources/configuration-file/</tt>. Most values in the configuration file can stay exactly as provided. We bring here the details of some of the values you may wish (or need) to change.
+
+===Common settings===
+
+{|
+|-
+! Section
+! Property
+! Value
+! Requirement
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>activatedEDA</tt>
+| It's the common setting for selecting the EDA. The default value here is <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>.
+| N/A
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>language</tt>
+| For the moment, <tt>MaxEntClassificationEDA</tt> supports English (<tt>EN</tt>), German (<tt>DE</tt>), and Italian (<tt>IT</tt>). In principle, the EDA is language-independent. The default value is <tt>EN</tt>.
+| N/A
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>activatedLAP</tt>
+| The linguistic analysis pipeline needed for the EDA. The default value is <tt>eu.excitementproject.eop.lap.
+dkpro.MaltParserEN</tt>. Notice that the <tt>EN</tt> indicates the language flag.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>
+| <tt>modelFile</tt>
+| The location where the trained model is stored. The default location is under <tt>./src/test/resources/model/</tt>. The conventional name for a model consists of the EDA name, the settings, and the language flag. For instance, MaxEntClassificationEDAModel_Base
++TS_DE means a German model using the bag-of-words similarity, the bag-of-lemmas similarity and the tree skeleton similarity. The default value is usually the same as the configuration file name.
+| For training, the model file should <b>NOT</b> exist; for testing, the path to the model file should be <b>updated</b> correctly.
+
+|-
+| <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>
+| <tt>trainDir</tt>
+| The directory contains the training data. The data should be (linguistically) preprocessed and serialized into <tt>xmi</tt> files. The default value is <tt>./target/EN/dev/</tt>. Notice that the <tt>EN</tt> indicates the language flag.
+| The directory should exist.
+
+|-
+| <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>
+| <tt>testDir</tt>
+| The directory contains the testing data. The data should be (linguistically) preprocessed and serialized into <tt>xmi</tt> files. The default value is <tt>./target/EN/test/</tt>. Notice that the <tt>EN</tt> indicates the language flag.
+| The directory should exist.
+
+|-
+| <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>
+| <tt>classifier</tt>
+| The setting for the maximum entropy classifier. For the moment, there are two parameters supported, maximum iteration number and the cutoff threshold, which are separated by comma. The default value is <tt>10000,1</tt>.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.
+core.MaxEntClassificationEDA</tt>
+| <tt>Components</tt>
+| The list of components used in the EDA, which are separated by comma. Notice that each of the components needs to have a separate section in the configuration file. Otherwise, there will be a <tt>ConfigurationException</tt>.
+| N/A
+
+|-
+| <tt>BagOfWordsScoring</tt>
+| N/A
+| The bag-of-words scoring component. There is no further settings supported.
+| The LAP should include a tokenizer, e.g., <tt>OpenNLPTaggerEN</tt>.
+
+|-
+| <tt>BagOfLemmasScoring</tt>
+| N/A
+| The bag-of-lemmas scoring component. There is no further settings supported.
+| The LAP should include a tokenizer and a lemmatizer, e.g., <tt>TreeTaggerEN</tt>.
+
+|-
+| <tt> BagOfDepsScoring </tt>
+| N/A
+| The bag-of-dependencies (without POS tags) scoring component. There is no further settings supported.
+| The LAP should include syntactic analysis, e.g., <tt>MaltParserEN</tt>.
+
+|-
+| <tt> BagOfDepsPosScoring </tt>
+| N/A
+| The bag-of-dependencies (with POS tags) scoring component. There is no further settings supported.
+| The LAP should include syntactic analysis, e.g., <tt>MaltParserEN</tt>.
+
+|-
+| <tt> TreeSkeletonScoring </tt>
+| N/A
+| The tree skeleton scoring component. There is no further settings supported.
+| The LAP should include syntactic analysis, e.g., <tt>MaltParserEN</tt>.
+
+|}
+
+===Specific settings for English===
+
+Notice that the English lexical resources, [[Detailed-manual-for-novice-users#wiki-How_to_Add_the_Additional_Resources|WordNet and VerbOcean]], need to be properly installed in order to run the following configurations respectively.
+
+{|
+|-
+! Section
+! Property
+! Value
+! Requirement
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>WordnetLexicalResource</tt>
+| It indicates the usage of the WordNet. The value indicates the relations used separated by comma. The default value is the relations related to entailment, i.e., <tt>HYPERNYM, SYNONYM, PART_HOLONYM</tt>. There is a separate section for further settings.
+| N/A
+
+|-
+| <tt>WordnetLexicalResource</tt>
+| <tt>wordNetFilesPath</tt>
+| The path to the location of WordNet. The default value is <tt>/ontologies/
+EnglishWordNet-dict/</tt>.
+| The path needs to be <b>updated</b>.
+
+|-
+| <tt>WordnetLexicalResource</tt>
+| <tt>isCollapsed</tt>
+| Whether to query the WordNet with all the selected relations together or separately. The default value is <tt>true</tt>.
+| N/A
+
+|-
+| <tt>WordnetLexicalResource</tt>
+| <tt>useFirstSenseOnlyLeft</tt>
+| Whether to query the WordNet with only the first sense on the left hand side of the relation. The default value is <tt>false</tt>.
+| N/A
+
+|-
+| <tt>WordnetLexicalResource</tt>
+| <tt>useFirstSenseOnlyRight</tt>
+| Whether to query the WordNet with only the first sense on the right hand side of the relation. The default value is <tt>false</tt>.
+| N/A
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>VerbOceanLexicalResource</tt>
+| It indicates the usage of the VerbOcean. The value indicates the relations used separated by comma. The default value is the relations related to entailment, i.e., <tt>StrongerThan, CanResultIn, Similar</tt>. There is a separate section for further settings.
+| N/A
+
+|-
+| <tt>VerbOceanLexicalResource</tt>
+| <tt>verbOceanFilePath</tt>
+| The path to the location of WordNet. The default value is <tt>/VerbOcean/
+verbocean.unrefined.2004-05-20.txt</tt>.
+| The path needs to be <b>updated</b>.
+
+|-
+| <tt>VerbOceanLexicalResource</tt>
+| <tt>isCollapsed</tt>
+| Whether to query the VerbOcean with all the selected relations together or separately. The default value is <tt>true</tt>.
+| N/A
+
+|}
+
+===Specific settings for German===
+
+Notice that the German lexical resources, [[Detailed-manual-for-novice-users#wiki-How_to_Add_the_Additional_Resources|GermaNet, DistSim, and DerivBase]], need to be properly installed in order to run the following configurations respectively. In particular, [[Detailed-manual-for-novice-users#wiki-GermaNet|GermaNet]] is not delivered with the EOP resources package. Further settings of the lexical resources can be found [[GermanLexicalResources|here]].
+
+{|
+|-
+! Section
+! Property
+! Value
+! Requirement
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>withPOS</tt>
+| Whether the bag-of-lexes scoring component will include POS in the queries to the lexical resources. The default value is <tt>false</tt>.
+| N/A
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>GermanDistSim</tt>
+| It indicates the usage of the German distributional similarity resource. Further settings can be found [[GermanLexicalResources#wiki-DEWakDistributional_corecomponentlexicalknowledgedewakdistributionalGermanDistSim|here]].
+| N/A
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>GermaNetWrapper</tt>
+| It indicates the usage of the GermaNet. The value indicates the relations used, separated by comma. The default value is the relations related to entailment, i.e., <tt>Causes, Entails, Has_Hypernym, Has_Synonym</tt>. Further settings can be found [[GermanLexicalResources#wiki-GermaNetWrapper_corecomponentlexicalknowledgegermanetGermaNetWrapper|here]].
+| [[Detailed-manual-for-novice-users#wiki-GermaNet|GermaNet]] should be properly installed and the path should be correctly specified.
+
+|-
+| <tt>BagOfLexesScoring</tt>
+| <tt>DerivBaseResource</tt>
+| It indicates the usage of the German derivational resource. Further settings can be found [[GermanLexicalResources#wiki-DerivBase_corecomponentlexicalknowledgederivbaseDerivBaseResource|here]].
+| It is only triggered when <tt>withPOS</tt> is turned on.
+
+|}

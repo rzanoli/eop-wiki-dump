@@ -1,0 +1,1 @@
+Users are those ones who do not want to modify the source code, add or modify the [[EDA]]s, add or modify the [[components]], etc. They would like to only use the [[EOP]] as it is provided.

@@ -1,0 +1,252 @@
+<tt>The edit distance EDA</tt> casts textual entailment as the problem of mapping the whole
+content of H into the content of T. Mappings are performed as sequences of editing
+operations (i.e. insertion, deletion, substitution of text portions) needed to transform T
+into H, where each edit operation has a cost associated with it. Different costs mean different distance functions. These are the most commonly used:
+
+• Levenshtein or edit distance (Levenshtein 1965): allows insertions, deletions and substitutions. In the simplified definition, all the operations cost 1. This can be rephrased as the minimal number of insertions, deletions and substitutions to make two strings equal. The distance is symmetric.
+
+• Hamming distance (Sankoff and Kruskal 1983): allows only substitutions, which cost 1. The distance is symmetric.
+
+• Episode distance (Das et al. 1997): allows only insertions which cost 1. This distance is not symmetric.
+
+
+
+Two different EDAs are available with the current release of the software: EditDistanceEDA and EditDistancePSOEDA.
+
+• EditDistanceEDA uses the weights of the edit distace operations as specified in its configuration file. 
+
+• EditDistancePSOEDA calculates the weights automatically by using Particle Swarm Optimization (PSO): Kennedy, J.; Eberhart, R. (1995). Particle Swarm Optimization. Proceedings of IEEE International Conference on Neural Networks IV. pp. 1942–1948. Basically PSO works by having a population (swarm) of candidate solutions (particles). These particles are moved around in the search-space according to a few formulae. The movements of the particles are guided by their own best known position in the search-space as well as the entire swarm's best known position. When improved positions are being discovered these will then come to guide the movements of the swarm. The process is repeated until stopping criteria is meet. It is hoped, but not guaranteed, that a satisfactory solution will eventually be discovered.
+
+Both EditDistanceEDA and EditDistancePSOEDA use the calculation made by the distance components to predict entailment/non-entailment relations among T-H pairs. The available components that can be used with Edit Distance are:
+
+• FixedWeightTokenEditDistance: a token-based version of the Levenshtein distance algorithm, with edit operations defined over sequences of tokens of T and H.
+
+• FixedWeightLemmaEditDistance: a token-based version of the Levenshtein distance algorithm, with edit operations defined over sequences of lemmas of tokens of T and H.
+
+Running <tt>EditDistanceEDA</tt> and <tt>EditDistancePSOEDA</tt> requires to have the data sets tokenized and their tokens annotated with their part-of-speech tags. When FixedWeightLemmaEditDistance is used lemmas of tokens are required too. In addition given that the edit distance components can use external resources like WordNet and Wikipedia to make their calculation, these resources may be needed to be installed.
+The remainder of this document describes the possible configurations for <tt>EditDistanceEDA</tt> and <tt>EditDistancePSOEDA</tt> .
+
+==Configuration File==
+
+We provide 3 configuration files that are distributed with the <tt>eop-resources package</tt>. The files are ready to be used. The only thing that one needs to set is the path of the models that are provided with the <tt>eop-resources package</tt>. These are the available models:
+
+• EditDistanceEDA_DE.xml (model for German language)
+
+• EditDistanceEDA_EN.xml (model for English language)
+
+• EditDistanceEDA_IT.xml (model for Italian language)
+
+
+Each of the files (a file for each of the 3 different supported languages: English, German and Italian) contains different instances of the algorithm that can be tested. The structure and values in these configuration files are explained in the table below.
+
+==Issues using the configuration files available as part of EOP resources v1.0.2==
+The configuration files of edit distance contained in the resources package v1.0.2 (i.e. eop-resources-1.0.2.tar.gz) are not compatible with the code of the release v1.0.2 and as a result they can not be used. As a temporary solution we made them available from hlt-services4.fbk.eu:8080/artifactory/tmp/edits_resources.tgz. This file contains both the configuration files and the models that users have to use with release v1.0.2. It is sufficient to substitute the files contained in the resources package v1.0.2 with them: the configuration files have to be put in configuration-files in eop-resources-1.0.2/ whereas the model files in the model directory of eop-resources-1.0.2/.
+
+===Common settings===
+
+{|
+
+|-
+! Section
+! Property
+! Value
+! Requirement
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>activatedEDA</tt>
+| The common setting for selecting the EDA. The default value here is <tt>eu.excitementproject.eop.core.EditDistanceEDA</tt>.
+| N/A
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>language</tt>
+| For the moment, <tt>EditDistanceEDA</tt> as well as <tt>EditDistancePSOEDA</tt> support English (<tt>EN</tt>), German (<tt>DE</tt>), and Italian (<tt>IT</tt>). 
+In principle, the EDA is language-independent.
+| N/A
+
+|-
+| <tt>PlatformConfiguration</tt>
+| <tt>activatedLAP</tt>
+| The linguistic analysis pipeline needed to produce input for the EDA. 
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br /> 
+[EditDistanceEDA|EditDistancePSOEDA]</tt>
+| <tt>modelFile</tt>
+| The name of the model learnt by the EDA during the training phase. The model will be used by the EDA to annotate the data of the test data.
+We use a convention that gives informative names to the models -- they include the specified model file name (e.g. EditDistanceEDA_IT_Model) as well as the name of the component used by the EDA and the selected instances (e.g. if EditDistanceEDA_IT_Model is the name of the model as specified in the configuration file and FixedWeightTokenEditDistance is the component to be used with its basic instance then the saved model will be called: EditDistanceEDA_IT_Model_FixedWeightTokenEditDistance_basic).
+
+| For training, the model file should <b>NOT</b> exist.
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+[EditDistanceEDA|EditDistancePSOEDA]</tt>
+| <tt>trainDir</tt>
+| The directory containing the training data, as produced by the LAP 
+(in <tt>xmi</tt> format).
+| The directory should exist.
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+[EditDistanceEDA|EditDistancePSOEDA]</tt>
+| <tt>testDir</tt>
+| The directory containing the test data, as produced by the LAP 
+(in <tt>xmi</tt> format).
+| The directory should exist.
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+[EditDistanceEDA|EditDistancePSOEDA]</tt>
+| <tt>measure</tt>
+| The measure to be optimized: accuracy vs f1
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+[EditDistanceEDA|EditDistancePSOEDA]</tt>
+| <tt>components</tt>
+| The component used by the EditDistanceEDA for distance computations. The components may require themselves additional parameters, which are specified in sections specific to each of them. 
+These sections are identified through the name of the component provided as value through this XML tag. 
+These components are available:
+
+<ol>
+    <li>FixedWeightTokenEditDistance</li>
+    <li>FixedWeightLemmaEditDistance</li>
+</ol>
+
+| N/A
+
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistanceEDA</tt>
+| <tt>weights</tt>
+| These are real valued weights for each string edit operation, used by the distance computation component.
+Levenshtein distance can be obtained setting the weights of deletion, insertion and substitution operations to 1. Hamming distance, setting to 1 substitution and to a much more higher value deletion and insertion (e.g. 1000). Episode distance, setting to 1 insertion and to a much more higher value deletion and substitution (e.g. 1000).
+| N/A
+
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>maxIteration</tt>
+| The max number of iteration of PSO. 
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>errorTolerance</tt>
+| When the error tollerance is satisfied, PSO stops.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>maxIterationWithoutChanges</tt>
+| PSO stops when the max number of iteration is reached that is without any changes in the results.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>swarmSize</tt>
+| The swarm size (i.e. the number of particles).
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>processors</tt>
+| The number of processors to be used to run PSO.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>deleteValuesRange</tt>
+| The range of values of the delete edit distance operation that PSO has to select a value from.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>insertValuesRange</tt>
+| The range of values of the insert edit distance operation that PSO has to select a value from.
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+EditDistancePSOEDA</tt>
+| <tt>substituteValuesRange</tt>
+| The range of values of the substitute edit distance operation that PSO has to select a value from 
+| N/A
+
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+component.distance.<br />
+FixedWeightTokenEditDistance</tt>
+| <tt>instances</tt>
+| The component computes the distance between two strings using the tokens and fixed weights for the string edit operations. The instance specifies the value of a subsection, which contains 
+the parameters needed to use this component. The instance to be used can be one of these 4:
+
+<ol>
+    <li>basic</li>
+    <li>wordnet</li>
+    <li>wikipedia</li>
+    <li>wordnet,wikipedia</li>
+</ol>
+
+<tt>basic</tt> means that only the tokens will be used to compute the edit distance between T and H. <tt>wordnet</tt> means that the FixedWeightTokenEditDistance will use WordNet as an external resource to compute the edit distance between T and H. Use <tt>wikipedia</tt> if you want to compute the edit distance between T and H by considering the rules extracted from Wikipedia. <tt>wordnet,wikipedia</tt> can be used to combine the information provided by the two resources. However with FixedWeightTokenEditDistance the rules in WordNet and Wikipedia will be searched by using the tokens and not the lemmas as in the case of FixedWeightLemmaEditDistance. As a results the contribution of these resources could not be of relevance.
+
+To be able to use this components, the LAP should provide token and part-of-speech annotations (Currently only TreeTagger provides this for all three languages, and TextPro for Italian).
+| N/A
+
+|-
+| <tt>eu.excitementproject.eop.core.<br />
+component.distance.<br />
+FixedWeightLemmaEditDistance</tt>
+| <tt>instances</tt>
+| The component computes the distance between two strings using the lemmas and fixed weights for the string edit operations. The instance specifies the value of a subsection, which contains 
+the parameters needed to use this component. The instance to be used can be one of these 4:
+
+<ol>
+    <li>basic</li>
+    <li>wordnet</li>
+    <li>wikipedia</li>
+    <li>wordent,wikipedia></li>
+</ol>
+
+<tt>basic</tt> means that only the tokens will be used to compute the edit distance between T and H. <tt>wordnet</tt> means that the FixedWeightTokenEditDistance will use WordNet as an external resource to compute the edit distance between T and H. Use <tt>wikipedia</tt> if you want to compute the edit distance between T and H by considering the rules extracted from Wikipedia. <tt>wordnet,wikipedia</tt> can be used to combine the information provided by the two resources.
+
+To be able to use this components, the LAP should provide token,lemma and part-of-speech annotations (Currently only TreeTagger provides this for all three languages, and TextPro for Italian).
+| N/A
+
+|-
+| <tt>basic / wordnet / wikipedia</tt>
+| <tt>stopWordRemoval</tt>
+| Can be ''true'' or ''false'', and indicates to the distance computation component whether to filter stop words or not
+| 
+
+|-
+| <tt>wordnet</tt>
+| <tt>path</tt>
+| The path to the particular WordNet resource used. The English WordNet is freely distributed and is included in the release. The Italian WordNet is also free but must be obtained through request from FBK. Details are provided in the [[Italian Lexical Resources|Doc for the Italian knowledge resources]]. GermaNet is properietary. Details about the resource and how to obtain it are provided in the [[GermanLexicalResources|Doc for the German knowledge resources]]
+| WordNet has to been installed.
+
+
+|-
+| <tt>wikipedia</tt>
+| <tt>path</tt>
+| The path to the particular Wikipedia resource used. Italian and English Wikipedia can be used.
+| Wikipedia has to been installed.
+
+
+
+|}
+
+
+

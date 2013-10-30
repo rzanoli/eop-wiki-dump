@@ -1,0 +1,59 @@
+This specification assumes that the platform shares a single implementation of configuration access.
+We start with a set of design decisions that follow from the requirements of the Entailment Core Common Configuration.
+
+* Components need to be able to recognize relevant sections in the configuration. Thus, each component class must have a ''component name''. This name should be easy for users to read and write in a configuration file. At the same time, individual instances of components require an ''instance name'' to distinguish among multiple instances. We recommend that component and instance names are human-readable rather than UUID-like. <br /> The common configuration object is able to return the applicable region of the configuration object for a component and for a component instance. The global section, with its special status, should be named <code>PlatformConfigurationRegion</code>.
+* Hierarchical data storage: The common configuration data structure is a recursive attribute-value list. That is, attributes cannot only have types atoms as values, but also attribute-value lists themselves. We foresee at least two levels: the level of "sections" and the level of "subsections". These levels correspond directly to components and instances: Sections contain information about components and are labeled with components IDs. Subsections contain information about instances and are labeled with instance IDs. <br />Note that (unlike in the existing EDITS configuration), the plain existence of a section or a subsection does not automatically means initialization of the component corresponding to that configuration. For example, a configuration file might have configuration sections of three EDAs, and choose one EDA to run, by specifying that EDA in the framework section as main EDA. This also makes it permissible to specify different "possible" or "recommended" configurations of a component as subsections in the configuration, only one of which is finally initialized.
+* Storage in XML format: The human-readable version of the common configuration will be stored and read as XML format. Users can edit the XML file as ordinary XML file. Since names are supposed to be unique, a name collision leads to an exception when the XML serialization of the configuration object is loaded.
+* Typing: All objects in XML are strings. The configuration currently does not know about the value types for its keys. Rather, we achieve typing by providing different access functions to the configuration. It is currently the user's responsibility to ask the configuration for the value of a key as a specific type.
+* The common configuration object specifies the behavior of components at initialization and/or reconfiguration time. The common configuration object is passed to each component as the argument of the constructor and/or <code>reconfigure()</code> methods. Each component must read the configuration and initialize and/or reconfigure itself accordingly.
+
+The figure below shows a conceptual overview of common configuration object. On the left hand side, the common configuration object is shown as a big table with hierarchy.
+It has two depths, sections and subsections. Each section is corresponding to a "region" for a specific
+entailment component. Actual configurations values are represented as lists of "(Name,Value)" pairs. A
+set of name-value pairs are called as a name-value table in this section.
+
+FIGURE HERE
+
+On the right hand side of the figure, the access of configuration values are described on a conceptual
+level. A component can access an instance of the common configuration object with <code>getSection()</code>
+or <code>getSubSection()</code> methods for components and their instances, respectively. A successful call
+returns a name-value table. Each value associated with a name can be accessed by a get method.
+
+Each section and subsection is represented as a name-value table. Once retrieved as a table, there is
+no differences between subsection and section. Note that one cannot access subsections of a section
+from a name-value table. A name-value table only holds the list of name-value pairs. The table is a
+typed key-value list. Thus, a value (which was written in an XML file as a string) can be accessed with
+<code>getString(name)</code>, <code>getInteger(name)</code>, or <code>getDouble(name)</code>. The XML strings will be converted
+automatically into the requested type.
+
+As an in-memory object, all name-value pairs are simply seen as a pair of a name (string) and an
+associated value. However, in XML file level, they can actually come from variables defined in the XML
+file (like, <property name="something">&variable</property>). Also, the configuration file
+should easily encode current system environment values in the XML configuration file (For example, it
+should permit expressions that uses $PATH variable, like <property name="mypath">{$PATH}/
+etc</property>). Many configuration management libraries already support such features. (Note.
+The above pseudo-XML code is given only as an example. The specification does not assume anything
+about how the name-value pairs are represented in XML.)
+
+For all entailment core components, the configuration is delivered as a whole (single big block contains
+all pairs) via <code>initialization()</code>. It is the responsibility of the initialization (thus of its implementers)
+to retrieve and use the relevant sections (by using <code>getSection</code> or <code>getSubSection</code>).
+
+Instance configuration areas (SubSections) are only needed for the components that support multiple
+instances with different configurations. If all instances of a component have the same configuration, the
+component do not use instance configuration and uses only the component configuration. For example,
+knowledge components generally have no need to have different configuration even if they have multiple
+instances.
+
+However, some components must have multiple instances with different configurations. Let's assume
+there is a distance calculation component that is shipped with two parameters. One is a path to a
+static resource (say, a dictionary), and the other is a numeric parameter alpha. Assume that the EDA
+needs to run two instances: one with alpha as 1.0, the other with alpha as 2.0. By having instance-wise
+configurations, the EDA can run two instances of the distance calculation component, each with different
+configuration. In this example, parameter path will stay in the component section, and parameter alpha
+will be written in the instance subsection.
+
+Note that there is no automatic inheritance of section-level information at the subsection level. That is,
+component instances will typically have to query both the section level for component-wide configuration
+and the subsection level for their own instance configuration. (In the above example, parameter path
+is not visible to the name-value table of the instance subsection.)

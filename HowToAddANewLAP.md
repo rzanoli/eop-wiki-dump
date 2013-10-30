@@ -1,0 +1,1 @@
+@TODO Gil: Update your UIMA CAS intro documents in style --- rearrange some of them, like specification CAS figures. Also need to state LAPImplBase and its capabilities --- and how to add a new LAP pipeline. 

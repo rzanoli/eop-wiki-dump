@@ -1,0 +1,30 @@
+Distribution release version 1.0.0
+Planned distribution release date: Monday, 1st of July 2013
+
+TODOs for the first version of the EOP distribution (All other TODOs all over the Wiki are planned for the next major distribution releases)
+
+The following table lists the items and the responsible ones for that:
+
+{background:#ddd}. |_. Item |_. Responsibility |_. Deadline  |_. Status (open/in progress/closed) |_. Overtime |
+|<. Produce the first major EOP distribution release (v1.0.0) |<. DFKI and FBK |<. June 30, 2013 | closed |  |
+|<. Update sample commands in the user manual to v1.0.0 |<. DFKI |<. June 30, 2013 | closed |  |
+|<. Test the BIUTEE EDA of the EOP Release Candidate (RC), i.e. v0.8.5, this won't be functional and performance testing, but just to see how the documentation could help install and run from the end-users' perspective |<. Gil, Roberto (and Vivi) |<. June 28, 2013 | in progress | YES |
+|<. Test the EDITS EDA of the EOP Release Candidate (RC), i.e. v0.8.5, this won't be functional and performance testing, but just to see how the documentation could help install and run from the end-users' perspective |<. Rui |<. June 28, 2013 | closed |  |
+|<. Test the TIE EDA of the EOP Release Candidate (RC), i.e. v0.8.5, this won't be functional and performance testing, but just to see how the documentation could help install and run from the end-users' perspective |<. Amir |<. June 28, 2013 | closed |  |
+|<. Subscribe email addresses to the eop-users and eop-dev mailing lists + specify the bug triagers and assignees |<. DFKI and FBK |<. June 28, 2013 | closed |  |
+|<. Create the eop-resources.tar archive for all the config files, models, knowledge resources, etc. and change the EOP resources link on the website from 0.1 to 0.8.3 |<. FBK and DFKI |<. June 24, 2013 | closed |  |
+|<. Copy the configuration file of the BIUTEE EDA as well as the configuration files of the EDITS and TIE EDAs to the config directory as well as the eop-resources package + copy the BIUTEE environment to the eop-resources package |<. DFKI |<. June 24, 2013 | closed |  |
+|<. Produce the EOP release candidate for the first major EOP distribution release (v0.8.4) |<. DFKI |<. June 24, 2013 | closed |  |
+|<. Resolve the issues of the configuration files (etc.) of the Edit Distance EDA and the TIE EDA, so that they works with the demo class and the config files |<. FBK and DFKI |<. June 21, 2013 | closed |  |
+|<. [[Brief documentation of EDITS similar to BIUTEE and TIE | https://github.com/hltfbk/Excitement-Open-Platform/wiki/EditDistanceEDA]] |<. FBK |<. June 15, 2013 | closed | |
+|<. [[TreeTagger: remove tree tagger binaries and provide a script that installs them instead.| https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users]] |<. HEI (Gil) |<. June 15, 2013 | closed | |
+|<. [[How to Install TextPro | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Detailed-manual-for-novice-users#textpro]] + [[Doc for the Italian knowledge resources | https://github.com/hltfbk/Excitement-Open-Platform/wiki/Italian-Lexical-Resources]] |<. FBK |<. June 21, 2013 | closed |  |
+|<. Test the latest EDITS and TIE config files and update developers + add set $DATA env. variable to the BIUTEE manual |<. DFKI |<. June 15, 2013 | closed | |
+|<. Add the binary release to the artifactory with link on the EOP website for non-Maven users |<. DFKI |<. June 15, 2013 | closed |  |
+|<. Update and polish the detailed user manual for novice users for the first distribution, mention the config files, how to config the environment (script for BIUTEE) |<. DFKI |<. June 15, 2013 | closed |  |
+|<. [[Doc for the German knowledge resources | GermanLexicalResources]] |<. HEI |<. June 2013 | closed |  |
+|<. [[Doc for the English knowledge resources | BIUTEE#db-based-knowledge-resources]]  |<. BIU |<. June 2013 | closed |  |
+|<. Transfer the WP8 Github repository to the one of WP4 (wiki, etc.) |<. DFKI |<. June 11, 2013 | closed |  |
+|<. Upgrade the EOP website + provide the config files via the website |<. DFKI |<. June 12, 2013 | closed |  |
+|<. Put the latest EOP distribution release in the release branch of the Git repository as well as the FBK artifactory |<. DFKI |<. June 12, 2013 | closed |  |
+|<. [[Doc: How to generate the EOP website for a new release | https://github.com/hltfbk/Excitement-Open-Platform/wiki/How-do-we-make-a-new-release%3F#how-to-upgrade-the-eop-website-for-a-new-release]] |<. DFKI |<. June 15, 2013 | closed |  |
